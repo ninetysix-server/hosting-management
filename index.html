@@ -2988,7 +2988,7 @@ async function generateInvoice(client, paymentDetails = {}) {
         doc.text('Reference:', contentWidth / 2, yPos + 20);
         
         doc.setFont('helvetica', 'normal');
-        doc.text('30 Days', margin + 40, yPos + 20);
+        doc.text('Monthly', margin + 40, yPos + 20);
         doc.text(invoiceNumber, contentWidth / 2 + 25, yPos + 20);
         
         yPos += 35;
@@ -3377,7 +3377,7 @@ async function generateReceipt(client, paymentDetails = {}) {
         doc.text('Description', margin + 5, yPos + 6);
         doc.text('Amount', pageWidth - margin - 15, yPos + 6, { align: 'right' });
         
-        yPos += 10;
+        yPos += 15;
         
         // Items
         doc.setFont('helvetica', 'normal');
@@ -3446,7 +3446,7 @@ async function generateReceipt(client, paymentDetails = {}) {
         
         doc.setFontSize(7);
         doc.setTextColor(100, 116, 139);
-        doc.text('96 Studios (Pty) Ltd | Tel: (081) 792-5033', 
+        doc.text('96 Studios (Pty) Ltd | Phone: (081) 792-5033', 
                 pageWidth / 2, pageHeight - 15, { align: 'center' });
         doc.text('www.96studios.co.za | Support@96studios.co.za', 
                 pageWidth / 2, pageHeight - 10, { align: 'center' });
@@ -4347,4 +4347,5 @@ document.getElementById('pdfPreviewModal').addEventListener('click', function(e)
 
     </script>
 </body>
+
 </html>
