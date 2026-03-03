@@ -3826,47 +3826,58 @@ async function generateInvoiceBlob(client) {
         // INVOICE DETAILS BOX
         // ============================================
         
-        doc.setFillColor(248, 249, 250);
-        doc.rect(margin, yPos, contentWidth, 25, 'F');
-        doc.setDrawColor(226, 232, 240);
-        doc.rect(margin, yPos, contentWidth, 25);
-        
-        const dueDate = new Date(client.dueDate);
-        const now = new Date();
-        const daysOverdue = Math.floor((now - dueDate) / (1000 * 60 * 60 * 24));
-        const isOverdue = daysOverdue > 0;
-        const currentMonth = new Date().toLocaleString('default', { month: 'long' });
-        const currentYear = new Date().getFullYear();
-        
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(9);
-        doc.setTextColor(51, 65, 85);
-        
-        // Row 1
-        doc.text('Invoice Period:', margin + 10, yPos + 8);
-        doc.text('Due Date:', contentWidth / 2, yPos + 8);
-        
-        doc.setFont('helvetica', 'normal');
-        doc.text(`${currentMonth} ${currentYear}`, margin + 40, yPos + 8);
-        
-        if (isOverdue) {
-            doc.setTextColor(...warningColor);
-            doc.text(`${dueDate.toLocaleDateString()}`, contentWidth / 2 + 25, yPos + 8);
-            doc.text(`(${daysOverdue} days overdue)`, contentWidth / 2 + 25, yPos + 14);
-        } else {
-            doc.setTextColor(0, 0, 0);
-            doc.text(dueDate.toLocaleDateString(), contentWidth / 2 + 25, yPos + 8);
-        }
-        
-        // Row 2
-        doc.setTextColor(51, 65, 85);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Payment Terms:', margin + 10, yPos + 20);
-        doc.text('Reference:', contentWidth / 2, yPos + 20);
-        
-        doc.setFont('helvetica', 'normal');
-        doc.text('30 Days', margin + 40, yPos + 20);
-        doc.text(invoiceNumber, contentWidth / 2 + 25, yPos + 20);
+        // ============================================
+// INVOICE DETAILS BOX - FIXED
+// ============================================
+
+doc.setFillColor(248, 249, 250);
+doc.rect(margin, yPos, contentWidth, 25, 'F');
+doc.setDrawColor(226, 232, 240);
+doc.rect(margin, yPos, contentWidth, 25);
+
+const dueDate = new Date(client.dueDate);
+const now = new Date();
+const daysOverdue = Math.floor((now - dueDate) / (1000 * 60 * 60 * 24));
+const isOverdue = daysOverdue > 0;
+
+// FIXED: Calculate billing period based on invoice date
+// Since invoice is generated on 2026/03/03, it should bill for February 2026
+const invoiceDate = new Date(); // Today's date when generating
+const billingDate = new Date(invoiceDate);
+billingDate.setMonth(billingDate.getMonth() - 1); // Go back 1 month
+
+const billingMonth = billingDate.toLocaleString('default', { month: 'long' });
+const billingYear = billingDate.getFullYear();
+
+doc.setFont('helvetica', 'bold');
+doc.setFontSize(9);
+doc.setTextColor(51, 65, 85);
+
+// Row 1
+doc.text('Invoice Period:', margin + 10, yPos + 8);
+doc.text('Due Date:', contentWidth / 2, yPos + 8);
+
+doc.setFont('helvetica', 'normal');
+doc.text(`${billingMonth} ${billingYear}`, margin + 40, yPos + 8); // FIXED: Shows February 2026
+
+if (isOverdue) {
+    doc.setTextColor(...warningColor);
+    doc.text(`${dueDate.toLocaleDateString()}`, contentWidth / 2 + 25, yPos + 8);
+    doc.text(`(${daysOverdue} days overdue)`, contentWidth / 2 + 25, yPos + 14);
+} else {
+    doc.setTextColor(0, 0, 0);
+    doc.text(dueDate.toLocaleDateString(), contentWidth / 2 + 25, yPos + 8);
+}
+
+// Row 2
+doc.setTextColor(51, 65, 85);
+doc.setFont('helvetica', 'bold');
+doc.text('Payment Terms:', margin + 10, yPos + 20);
+doc.text('Reference:', contentWidth / 2, yPos + 20);
+
+doc.setFont('helvetica', 'normal');
+doc.text('Monthly', margin + 40, yPos + 20);
+doc.text(invoiceNumber, contentWidth / 2 + 25, yPos + 20);
         
         yPos += 35;
         
@@ -4349,3 +4360,4 @@ document.getElementById('pdfPreviewModal').addEventListener('click', function(e)
 </body>
 
 </html>
+
